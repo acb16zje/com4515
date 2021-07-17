@@ -1,0 +1,254 @@
+\documentclass[12pt, a4paper]{article}
+\edef\restoreparindent{\parindent=\the\parindent\relax}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage[top=25mm, right=25mm, bottom=25mm, left=25mm]{geometry}
+\usepackage{microtype}
+\usepackage{parskip}
+
+\restoreparindent
+
+\pagestyle{fancy}
+\fancyhead[L]{COM4515 Network Performance Analysis}
+\fancyhead[R]{Registration No: 160203853}
+\setlength{\headheight}{15pt}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\begin{document}
+\section*{Question 1}
+
+\textbf{1. (a) (i)}
+\begin{itemize}
+  \item \(\lambda\) is the arrival rate of the packets / customers / etc. per unit of time
+  \item \(\mu\) is the service rate of the packets / customers / etc. per unit of time
+  \item \(\rho < 1\) to achieve steady state
+\end{itemize}
+
+\vspace{1cm}
+\noindent \textbf{1. (a) (ii)}
+\begin{align*}
+  \sum_{k=0}^{\infty} P_k &= 1 \\
+  \sum_{k=0}^{m-1} P_0\left(\frac{(m\rho)^k}{k!}\right) +
+    \sum_{k=m}^{\infty} P_0\left(\frac{m^m\rho^k}{m!}\right) &= 1 \\
+  P_0 \left[\sum_{k=0}^{m-1} \frac{(m\rho)^k}{k!} + \frac{m^m}{m!}\sum_{k=m}^{\infty} \rho^k \right] &= 1 \\
+  P_0 \left[\sum_{k=0}^{m-1} \frac{(m\rho)^k}{k!} + \frac{(m\rho)^m}{m!}\sum_{k=m}^{\infty} \rho^{k-m} \right] &= 1 \\
+  P_0 \left[\sum_{k=0}^{m-1} \frac{(m\rho)^k}{k!} + \frac{(m\rho)^m}{m!(1-\rho)} \right] &= 1
+\end{align*}
+Therefore,
+\[P_0 = \left[\sum_{k=0}^{m-1} \frac{(m\rho)^k}{k!} + \frac{(m\rho)^m}{m!(1-\rho)} \right]^{-1}\]
+
+\vspace{1cm}
+\noindent \textbf{1. (b) (i)}
+
+\noindent When \(m = 3\),
+\[
+ P_k =
+  \begin{dcases}
+   P_0 \left(\frac{(3\rho)^k}{k!}\right) & k < 3 \\[1.5ex]
+   P_0 \left(\frac{3^3\rho^k}{3!}\right) = P_0 \left(\frac{9\rho^k}{2}\right) & k \geq 3
+  \end{dcases}
+  \quad\text{,}\quad \rho = \frac{\lambda}{m\mu} < 1
+\]
+\(\rho < 1\) for steady state solution to exist
+
+\newpage
+\noindent \textbf{1. (b) (ii)}
+
+\noindent Substituting \(m = 3\) into \(P_0\) obtained in \textbf{1. (a) (ii)},
+\begin{align*}
+  P_0 &= \left[\sum_{k=0}^{3-1} \frac{(3\rho)^k}{k!} + \frac{(3\rho)^3}{3!(1-\rho)} \right]^{-1} \\
+  &= \left[\sum_{k=0}^{2} \frac{(3\rho)^k}{k!} + \frac{9\rho^3}{2(1-\rho)} \right]^{-1} \\
+  &= \left[\sum_{k=0}^{2} \frac{(3\rho)^k}{k!} + \frac{9\rho^3}{2(1-\rho)} \right]^{-1} \\
+  &= \left[1 + 3\rho + \frac{9\rho^2}{2} + \frac{9\rho^3}{2(1-\rho)}\right]^{-1}
+\end{align*}
+
+\vspace{1cm}
+\noindent \textbf{1. (b) (iii)}
+
+\noindent For \(m = 3\), the average number of packets in the system is:
+\begin{align*}
+  E\{k\} &= \sum_{k=0}^{m-1} kP_k + \sum_{k=m}^{\infty} kP_k \\
+  &= \sum_{k=0}^{2} kP_0\left(\frac{(3\rho)^k}{k!}\right) + \sum_{k=3}^{\infty} kP_0 \left(\frac{9\rho^k}{2}\right) \\
+  &= P_0\sum_{k=0}^{2} \frac{k(3\rho)^k}{k!} + \frac{9P_0}{2}\sum_{k=3}^{\infty} k\rho^k \\
+\intertext{Further simplifying the above expression,}
+  E\{k\} &= P_0 \left[\sum_{k=1}^{2} \frac{(3\rho)^k}{(k-1)!} + \frac{9}{2}\left(\sum_{k=0}^{\infty} k\rho^k - \rho - 2\rho^2\right) \right]
+\end{align*}
+
+\noindent\(\sum_{k=0}^{\infty} k\rho^k\) can be simplified as
+\begin{align*}
+  \sum_{k=0}^{\infty} k\rho^k = \rho\sum_{k=0}^{\infty} k\rho^{k-1} = \rho\frac{\partial}{\partial\rho}\sum_{k=0}^{\infty} \rho^k = \rho\frac{\partial}{\partial\rho}\left[\frac{1}{1-\rho}\right] = \frac{\rho}{(1-\rho)^2}
+\end{align*}
+Hence,
+\begin{align*}
+  E\{k\} &= P_0 \left[3\rho + 9\rho^2 + \frac{9}{2}\left(\frac{\rho}{(1-\rho)^2} - \rho - 2\rho^2\right) \right] \\
+  &= P_0 \left[3\rho + 9\rho^2 + \frac{9\rho}{2(1-\rho)^2} - \frac{9\rho}{2} - 9\rho^2 \right] \\
+  &= P_0 \left[\frac{9\rho}{2(1-\rho)^2} - \frac{3\rho}{2}\right]
+\end{align*}
+
+% ==================================================================
+\newpage
+\section*{Question 2}
+\textbf{2. (a) (i)}
+
+\noindent The formula for the Poisson distribution of \(k\) events occurring in a time interval \(t\) is:
+\[
+  P(k \mid t,\lambda) = \frac{(\lambda t)^k}{k!}\exp{(-\lambda t)}
+\]
+where \(\lambda\) is the rate at which the events are occurring.
+
+\vspace{0.5cm}
+\noindent Mean of Poisson distribution:
+\begin{align*}
+  E\{k\} = \sum_{k=0}^{\infty} kP(k \mid t,\lambda) &= \sum_{k=0}^{\infty} \frac{k(\lambda t)^k}{k!} \exp{(-\lambda t)} \\
+  &= \exp{(-\lambda t)} \sum_{k=1}^{\infty} \frac{(\lambda t)^k}{(k-1)!} \\
+  &= \lambda t\exp{(-\lambda t)}\sum_{k=1}^{\infty} \frac{(\lambda t)^{k-1}}{(k-1)!} \\
+  &= \lambda t\exp{(-\lambda t)}\sum_{m=0}^{\infty} \frac{(\lambda t)^m}{m!} \\
+  &= \lambda t\exp{(-\lambda t)}\exp{(\lambda t)} \\
+  &= \lambda t
+\end{align*}
+
+\noindent Variance of Poisson distribution:
+\begin{align*}
+  var\{k\} &= E\{k^2\} - (E\{k\})^2 \\
+  &= E\{k^2\} - (\lambda t)^2
+\intertext{where}
+  E\{k^2\} = \sum_{k=0}^{\infty}k^2P(k \mid t,\lambda) &= \sum_{k=0}^{\infty} \frac{k^2(\lambda t)^k}{k!} \exp{(-\lambda t)} \\
+  &= \exp{(-\lambda t)} \sum_{k=1}^{\infty} \frac{k(\lambda t)^k}{(k-1)!} \\
+  &= \exp{(-\lambda t)} \left[\sum_{k=1}^{\infty} \frac{(k-1)(\lambda t)^k}{(k-1)!} + \sum_{k=1}^{\infty} \frac{(\lambda t)^k}{(k-1)!} \right] \\
+  &= \exp{(-\lambda t)} \left[(\lambda t)^2\sum_{k=2}^{\infty} \frac{(\lambda t)^{k-2}}{(k-2)!} + (\lambda t)\sum_{k=1}^{\infty} \frac{(\lambda t)^{k-1}}{(k-1)!} \right] \\
+  &= \exp{(-\lambda t)} \left[(\lambda t)^2\exp{(\lambda t)} + (\lambda t)\exp{(\lambda t)} \right] \\
+  &= (\lambda t)^2 + \lambda t
+\intertext{therefore}
+  var\{k\} &= (\lambda t)^2 + \lambda t - (\lambda t)^2 \\
+  &= \lambda t
+\end{align*}
+
+\vspace{1cm}
+\noindent\textbf{2. (a) (ii)}
+\begin{align*}
+  P(\text{no arrivals in time interval }T) &= P(k = 0 \mid t = T,\lambda) \\
+  &= \frac{(\lambda T)^0}{0!}\exp{(-\lambda T)} \\
+  &= \exp{(-\lambda T)}
+\end{align*}
+
+\vspace{1cm}
+\noindent\textbf{2. (a) (iii)}
+\begin{align*}
+  P(\text{at least one arrival in time interval }T) &= 1 - P(\text{no arrivals in time interval }T) \\
+  &= 1 - \exp{(-\lambda T)}
+\end{align*}
+
+\vspace{1cm}
+\noindent\textbf{2. (b) (i)}
+
+\noindent The balance equation is:
+\[\lambda_{k-1}P_{k-1} + \mu_{k+1}P_{k+1} = \lambda_kP_k + \mu_kP_k\]
+
+\noindent The solution of this equation is:
+\begin{align*}
+  \lambda_{k-1}P_{k-1} &= \mu_kP_k \\
+  P_k &= \frac{\lambda}{\mu}\alpha^{k-1}P_{k-1}
+\end{align*}
+Calculating the first few terms,
+\begin{alignat*}{2}
+  P_1 &= \frac{\lambda}{\mu}P_0 \\
+  P_2 &= \frac{\lambda}{\mu}\alpha P_1 &&= \left(\frac{\lambda}{\mu}\right)^2\alpha P_0 \\
+  P_3 &= \frac{\lambda}{\mu}\alpha^2 P_2 &&= \left(\frac{\lambda}{\mu}\right)^3\alpha^3 P_0 \\
+  P_4 &= \frac{\lambda}{\mu}\alpha^3 P_3 &&= \left(\frac{\lambda}{\mu}\right)^4\alpha^6 P_0
+\end{alignat*}
+Hence, the general solution is:
+\[P_k = \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k-1)}{2}}P_0 \quad\text{,}\quad k \geq 0\]
+
+\noindent In order to achieve a steady state solution for all state \(k\), the arrival rate (\(\lambda_k = \lambda a^k\)) must be smaller than the service rate (\(\mu_k = \mu\)). If \(a \geq 1\), it is possible that \(\lambda a^k \geq \mu\) for some \(\lambda\), \(\mu\), or \(k\). Therefore, \(\alpha\) must be \(0 \leq \alpha < 1\).
+
+\newpage
+\noindent\textbf{2. (b) (ii)}
+
+\noindent Calculate \(P_0\) using the normalisation condition:
+\begin{align*}
+  \sum_{k=0}^{\infty} P_k &= 1 \\
+  \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k-1)}{2}}P_0 &= 1 \\
+  P_0 \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k-1)}{2}} &= 1
+\end{align*}
+Therefore,
+\[P_0 = \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1}\]
+
+\begin{align*}
+  P(\text{two or more people in the system}) &= 1 - P_0 - P_1 \\
+  &= 1 - P_0 - \frac{\lambda}{\mu}P_0 \\
+  &= 1 - P_0\left(1 + \frac{\lambda}{\mu}\right) \\
+  &= 1 - \left(1 + \frac{\lambda}{\mu}\right)\left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1}
+\end{align*}
+
+\vspace{1cm}
+\noindent\textbf{2. (b) (iii)}
+\begin{align*}
+ \Bar{\lambda} &= \sum_{k=0}^{\infty} \lambda_kP_k \\
+ &= \sum_{k=0}^{\infty} \lambda\alpha^k \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k-1)}{2}}P_0 \\
+ &= \lambda P_0 \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k-1) + 2k}{2}} \\
+ &= \lambda \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1} \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k+1)}{2}}\right]
+\end{align*}
+
+\noindent In \textbf{2. (b) (i)}, the value of \(\alpha\) is restricted to \(0 \leq \alpha < 1\). Consider three cases here:
+
+\noindent \textbf{Case 1:} \(a = 0\)
+\[\Bar{\lambda} = \lambda \left[1 + \frac{\lambda}{\mu}\right]^{-1}\]
+\(\Bar{\lambda} < \lambda\), thus a steady state solution exists
+
+\noindent \textbf{Case 2:} \(a = 1\)
+\begin{align*}
+   \Bar{\lambda} &= \lambda \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\right]^{-1} \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \right] \\
+   &= \lambda
+\end{align*}
+
+\noindent \textbf{Case 3:} \(a > 1\)
+
+In this case, both infinite sum \(\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\) and \(\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \alpha^{\textstyle\frac{k(k+1)}{2}}\) will not converge. Therefore, it is possible that the average arrival rate (\(\Bar{\lambda}\)) is greater than the average service rate (\(\Bar{\mu}\)), the queue continues to grow in size and a steady state distrubution does not exist.
+
+N.B. Since the service rate (\(\mu_k\)) is constant across all states \(k\), thus the average service rate is equal to \(\mu\).
+
+\vspace{1cm}
+\noindent\textbf{2. (b) (iv)}
+\[P_0 = \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1}\]
+
+\noindent If \(\displaystyle\frac{\lambda}{\mu} < 1\), it is known that
+\[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k = \frac{1}{1 - \frac{\lambda}{\mu}} \]
+
+\noindent and when \(a = 1\),
+\begin{align*}
+  \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}} &\equiv \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k \\[1.5ex]
+  &= \frac{1}{1 - \frac{\lambda}{\mu}}
+\end{align*}
+
+\noindent Therefore, when \(0 \leq \alpha < 1\),
+\begin{align*}
+  \sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}} &< \frac{1}{1 - \frac{\lambda}{\mu}} \\
+  \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1} &> 1 - \frac{\lambda}{\mu} \\
+\intertext{and thus}
+  P_0 &> 1 - \frac{\lambda}{\mu}
+\end{align*}
+
+\newpage
+\noindent\textbf{2. (b) (v)}
+
+% \noindent The condition \(\displaystyle\frac{\lambda}{\mu} < 1\) is necessary for a steady state solution to exist.
+\noindent For \(0 \leq \alpha < 1\), by observing at the expression \(P_0\):
+\[P_0 = \left[\sum_{k=0}^{\infty} \left(\frac{\lambda}{\mu}\right)^k\alpha^{\textstyle\frac{k(k-1)}{2}}\right]^{-1}\]
+
+\noindent the infinite sum is guaranteed to converge when \(\displaystyle\frac{\lambda}{\mu} < 1\) as \(k \rightarrow \infty\).
+
+\noindent \underline{\textbf{Analysis for }\(\displaystyle\frac{\lambda}{\mu} \geq 1\)}
+\begin{itemize}
+  \item If \(\displaystyle\frac{\lambda}{\mu} = 1\), as \(k \rightarrow \infty\), \(\displaystyle\left(\frac{\lambda}{\mu}\right)^k = 1\)
+  \item If \(\displaystyle\frac{\lambda}{\mu} > 1\), as \(k \rightarrow \infty\), \(\displaystyle\left(\frac{\lambda}{\mu}\right)^k \rightarrow \infty\)
+  \item For \(0 \leq \alpha < 1\), as \(k \rightarrow \infty\), \(\alpha^{\textstyle\frac{k(k-1)}{2}} \rightarrow 0\)
+\end{itemize}
+
+\noindent Therefore, a steady state solution does not exist for \(\displaystyle\frac{\lambda}{\mu} > 1\) as \(\infty \times 0\) is undefined. However, a steady state solution does exist for \(\displaystyle\frac{\lambda}{\mu} = 1\) as the sum converges.
+
+In summary, the infinite sum will converge when \(\displaystyle\frac{\lambda}{\mu} \leq 1\). As a result, the condition \(\displaystyle\frac{\lambda}{\mu} < 1\) (or more precisely, \(\displaystyle\frac{\lambda}{\mu} \leq 1\)) is necessary for a steady state solution to exist.
+
+\end{document}
